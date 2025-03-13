@@ -14,6 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 @Composable
 fun CopBotScreen() {
     var query by remember { mutableStateOf("") }
+    var response by remember { mutableStateOf("") } // Declare response state
 
     Column(
         modifier = Modifier
@@ -21,7 +22,6 @@ fun CopBotScreen() {
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // App Title
         Text(
             text = "COPBOT",
             fontSize = 32.sp,
@@ -30,7 +30,6 @@ fun CopBotScreen() {
             modifier = Modifier.padding(top = 50.dp, bottom = 30.dp)
         )
 
-        // Input Field
         OutlinedTextField(
             value = query,
             onValueChange = { query = it },
@@ -40,15 +39,33 @@ fun CopBotScreen() {
                 .padding(vertical = 16.dp)
         )
 
-        // Send Button
         Button(
-            onClick = { /* TODO: Handle query submission */ },
+            onClick = {
+                response = getResponse(query) // Update response state
+            },
             colors = ButtonDefaults.buttonColors(containerColor = Color.Blue),
-            modifier = Modifier
-                .padding(top = 10.dp)
+            modifier = Modifier.padding(top = 10.dp)
         ) {
             Text(text = "Send", color = Color.White)
         }
+
+        if (response.isNotEmpty()) {
+            Text(
+                text = response,
+                fontSize = 18.sp,
+                color = Color.DarkGray,
+                modifier = Modifier.padding(top = 20.dp)
+            )
+        }
+    }
+}
+
+fun getResponse(query: String): String {
+    return when {
+        query.contains("hello", ignoreCase = true) -> "Hello! I'm CopBot How can I assist you?"
+        query.contains("how are you", ignoreCase = true) -> "I'm just a bot, but I'm here to help!"
+        query.contains("bye", ignoreCase = true) -> "Goodbye! Have a great day!"
+        else -> "I'm not sure, but I'll try to improve!"
     }
 }
 
